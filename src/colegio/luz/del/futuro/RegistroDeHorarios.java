@@ -5,12 +5,14 @@
  */
 package colegio.luz.del.futuro;
 
+import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 
 
@@ -20,16 +22,16 @@ import java.util.logging.Logger;
  */
 public class RegistroDeHorarios extends javax.swing.JFrame {
 
-    Connection con = null;
-    Statement stmt = null;
+    Conectar conn = new Conectar ();
+    Connection cn = conn.conexion();
     
     public RegistroDeHorarios() {
          initComponents();
          setTitle("Registro de Horarios");
-        setLocationRelativeTo(null);
+         setLocationRelativeTo(null);
     }
-      
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,6 +41,10 @@ public class RegistroDeHorarios extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
+        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
+        jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txt_Asignatura = new javax.swing.JTextField();
@@ -46,18 +52,20 @@ public class RegistroDeHorarios extends javax.swing.JFrame {
         txt_Maestro = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txt_Curso = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        txt_Dia = new javax.swing.JTextField();
-        txt_Hora = new javax.swing.JTextField();
-        btn_Horarios = new javax.swing.JButton();
         btn_Guardar = new javax.swing.JButton();
         btn_Cancelar = new javax.swing.JButton();
+        jcb_Dia = new javax.swing.JComboBox<>();
+        jcb_Hora = new javax.swing.JComboBox<>();
+
+        jCheckBoxMenuItem1.setSelected(true);
+        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
+
+        jCheckBoxMenuItem2.setSelected(true);
+        jCheckBoxMenuItem2.setText("jCheckBoxMenuItem2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registro de horarios");
-
-        jPanel1.setBackground(new java.awt.Color(0, 153, 255));
+        setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Asignatura");
@@ -86,27 +94,6 @@ public class RegistroDeHorarios extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel4.setText("Dia");
-
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel5.setText("Hora");
-
-        txt_Dia.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_DiaKeyTyped(evt);
-            }
-        });
-
-        txt_Hora.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_HoraKeyTyped(evt);
-            }
-        });
-
-        btn_Horarios.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btn_Horarios.setText("Horarios");
-
         btn_Guardar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btn_Guardar.setText("Guardar");
         btn_Guardar.addActionListener(new java.awt.event.ActionListener() {
@@ -123,6 +110,22 @@ public class RegistroDeHorarios extends javax.swing.JFrame {
             }
         });
 
+        jcb_Dia.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jcb_Dia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dia", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes" }));
+        jcb_Dia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcb_DiaActionPerformed(evt);
+            }
+        });
+
+        jcb_Hora.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jcb_Hora.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hora", "08:00 AM a 08:45 AM", "08:45 AM a 09:30 AM", "09:30 AM a 10:15 AM", "10:30 AM a 11:15 AM", "11:15 AM a 12:00 M" }));
+        jcb_Hora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcb_HoraActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -130,59 +133,48 @@ public class RegistroDeHorarios extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(52, 52, 52)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn_Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(txt_Asignatura, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_Hora, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel5)
-                    .addComponent(txt_Curso, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(72, 72, 72)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btn_Guardar, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addComponent(txt_Asignatura, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addComponent(txt_Curso, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
+                    .addComponent(jcb_Hora, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel4)
                     .addComponent(txt_Maestro)
-                    .addComponent(txt_Dia)
-                    .addComponent(btn_Horarios, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-                    .addComponent(btn_Cancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 67, Short.MAX_VALUE))
+                    .addComponent(btn_Cancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                    .addComponent(jcb_Dia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addComponent(jLabel1))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addContainerGap(32, Short.MAX_VALUE)
                         .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_Asignatura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txt_Maestro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
+                .addGap(52, 52, 52)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_Dia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
+                    .addComponent(jcb_Hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcb_Dia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txt_Curso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_Guardar)
-                            .addComponent(btn_Cancelar))
-                        .addGap(74, 74, 74))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btn_Horarios)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addComponent(txt_Curso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_Guardar)
+                    .addComponent(btn_Cancelar))
+                .addGap(74, 74, 74))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -205,95 +197,48 @@ public class RegistroDeHorarios extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_CursoActionPerformed
 
     private void btn_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelarActionPerformed
-        txt_Asignatura.setText(null);
-        txt_Maestro.setText(null);
-        txt_Curso.setText(null);
-        txt_Dia.setText(null);
-        txt_Hora.setText(null);
+        txt_Asignatura.setText("");
+        txt_Maestro.setText("");
+        txt_Curso.setText("");
+        jcb_Dia.setSelectedItem("Dia");
+        jcb_Hora.setSelectedItem("Hora");
        // TODO add your handling code here:
     }//GEN-LAST:event_btn_CancelarActionPerformed
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
-        String cadena2,cadena3,cadena4,cadena5,cadena6;
-                
-        cadena2 = txt_Asignatura.getText();
-        cadena3 = txt_Maestro.getText();
-        cadena4 = txt_Curso.getText();
-        cadena5 = txt_Dia.getText();
-        cadena6 = txt_Hora.getText();
-        
-      if (txt_Asignatura.getText().equals("") || (txt_Maestro.getText().equals("")) || 
-          (txt_Curso.getText().equals("")) || (txt_Dia.getText().equals(""))
-           ||(txt_Hora.getText().equals(""))){
-          
-          javax.swing.JOptionPane.showMessageDialog(this,"Debe llenar todos los campos\n","ALERTA",
-          javax.swing.JOptionPane.INFORMATION_MESSAGE);
-          
-          txt_Asignatura.requestFocus();
-    }
       
-              else {
-        try {
-           
-            String url = "jdbc:mysql://localhost:3306/nombre_de_tu_base_de_datos";
-            String usuario = "root";
-            String contraseña = "tu_contraseña";
+    try {
+            PreparedStatement pps;
+            pps = cn.prepareStatement("INSERT INTO RegistroDeHorarios(Asignatura, Maestro, Curso, Dia, Hora)VALUES (?,?,?,?,?)");
+            pps.setString(1, txt_Asignatura.getText());
+            pps.setString(2, txt_Maestro.getText());
+            pps.setString(3, txt_Curso.getText());
+            pps.setString(4, jcb_Dia.getSelectedItem().toString());
+            pps.setString(5, jcb_Hora.getSelectedItem().toString());
+            pps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Sus datos han sido guardados");
             
-             Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-             con = DriverManager.getConnection(url,usuario,contraseña); 
-             if ( con != null ) 
-                    System.out.println("Se ha establecido una conexión a la base de datos " +  
-                                       "\n " + url ); 
-  
-                  stmt = con.createStatement(); 
-                  stmt.executeUpdate("INSERT INTO RegistroDeHorarios VALUES('"+cadena2+"','"+cadena3+"','"+cadena4+"','"+cadena5+"','"+cadena6+"')");
-                  System.out.println("Los valores han sido agregados a la base de datos ");
-                 
-                   
-        } catch (InstantiationException ex) {
-           Logger.getLogger(RegistroDeHorarios.class.getName()).log(Level.SEVERE, null, ex);
-       } catch (IllegalAccessException ex) {
-           Logger.getLogger(RegistroDeHorarios.class.getName()).log(Level.SEVERE, null, ex);
-       } catch (ClassNotFoundException ex) {
-           Logger.getLogger(RegistroDeHorarios.class.getName()).log(Level.SEVERE, null, ex);
-       } catch (SQLException ex) {
-           Logger.getLogger(RegistroDeHorarios.class.getName()).log(Level.SEVERE, null, ex);
-       }
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistroDeHorarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        finally {
-            if (con != null) {
-                try {
-                    con.close();
-                    stmt.close();
-                } catch ( Exception e ) { 
-                         System.out.println( e.getMessage());
-                }
-            }
-        }
-         javax.swing.JOptionPane.showMessageDialog(this,"Registro exitoso! \n","AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
-        }
-        this.txt_Asignatura.setText("");
-        this.txt_Maestro.setText("");
-        this.txt_Curso.setText("");
-        this.txt_Dia.setText("");
-        this.txt_Hora.setText("");  
-
-
-        // TODO add your handling code here:
+       if (txt_Asignatura.getText().equals("") || txt_Maestro.getText().equals("") || txt_Curso.getText().equals("") ||
+           jcb_Dia.getSelectedItem().equals("") || jcb_Hora.getSelectedItem().equals("")){
+           javax.swing.JOptionPane.showMessageDialog(this,"Todos los campos son oblicatorios\n","AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+           txt_Asignatura.requestFocus();
+        } 
+            txt_Asignatura.setText("");
+            txt_Maestro.setText("");
+            txt_Curso.setText("");
+            jcb_Dia.setSelectedItem("Dia");
+            jcb_Hora.setSelectedItem("Hora");
     }//GEN-LAST:event_btn_GuardarActionPerformed
-
+    
     private void txt_AsignaturaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_AsignaturaKeyTyped
-        
         char c = evt.getKeyChar();
         if((c<'a' || c>'z') && (c<'A' || c>'Z') && (c<' ' || c>' ')) evt.consume();
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_AsignaturaKeyTyped
-
-    private void txt_HoraKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_HoraKeyTyped
-         char c = evt.getKeyChar();
-        if(c<'0' || c>'9') evt.consume();
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_HoraKeyTyped
 
     private void txt_MaestroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_MaestroKeyTyped
          char c = evt.getKeyChar();
@@ -301,11 +246,13 @@ public class RegistroDeHorarios extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_MaestroKeyTyped
 
-    private void txt_DiaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_DiaKeyTyped
-        char c = evt.getKeyChar();
-        if((c<'a' || c>'z') && (c<'A' || c>'Z'))evt.consume();
+    private void jcb_DiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcb_DiaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txt_DiaKeyTyped
+    }//GEN-LAST:event_jcb_DiaActionPerformed
+
+    private void jcb_HoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcb_HoraActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcb_HoraActionPerformed
 
     /**
      * @param args the command line arguments
@@ -345,17 +292,18 @@ public class RegistroDeHorarios extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Cancelar;
     private javax.swing.JButton btn_Guardar;
-    private javax.swing.JButton btn_Horarios;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JComboBox<String> jcb_Dia;
+    private javax.swing.JComboBox<String> jcb_Hora;
     private javax.swing.JTextField txt_Asignatura;
     private javax.swing.JTextField txt_Curso;
-    private javax.swing.JTextField txt_Dia;
-    private javax.swing.JTextField txt_Hora;
     private javax.swing.JTextField txt_Maestro;
     // End of variables declaration//GEN-END:variables
 }
