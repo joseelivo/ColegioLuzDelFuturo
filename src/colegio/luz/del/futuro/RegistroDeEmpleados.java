@@ -47,7 +47,6 @@ public class RegistroDeEmpleados extends javax.swing.JFrame {
         fechaInicio = new javax.swing.JLabel();
         telefono = new javax.swing.JLabel();
         sueldo = new javax.swing.JLabel();
-        txt_nombre = new javax.swing.JTextField();
         txt_apellidos = new javax.swing.JTextField();
         txt_direccion = new javax.swing.JTextField();
         txt_posicion = new javax.swing.JTextField();
@@ -57,7 +56,8 @@ public class RegistroDeEmpleados extends javax.swing.JFrame {
         txt_sueldo = new javax.swing.JTextField();
         guardar = new javax.swing.JButton();
         txt_cancelar = new javax.swing.JButton();
-        label_fondo = new javax.swing.JLabel();
+        txt_nombre = new javax.swing.JTextField();
+        fondoJPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registro de Empleados Administrativos");
@@ -94,13 +94,6 @@ public class RegistroDeEmpleados extends javax.swing.JFrame {
         sueldo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         sueldo.setText("Sueldo:");
         getContentPane().add(sueldo, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 230, -1, -1));
-
-        txt_nombre.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_nombreKeyTyped(evt);
-            }
-        });
-        getContentPane().add(txt_nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 200, -1));
 
         txt_apellidos.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -154,19 +147,13 @@ public class RegistroDeEmpleados extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txt_cancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 330, 90, 30));
+        getContentPane().add(txt_nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 200, -1));
 
-        label_fondo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        label_fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/FondoFormulario.jpg"))); // NOI18N
-        getContentPane().add(label_fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 610, 410));
+        fondoJPanel.setBackground(new java.awt.Color(204, 204, 204));
+        getContentPane().add(fondoJPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 610, 410));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void txt_nombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_nombreKeyTyped
-        
-        char n = evt.getKeyChar();
-        if((n<'a' || n>'z' ) && ( n<'A' || n>'Z') && (n<' ' || n>' ') ) evt.consume();
-    }//GEN-LAST:event_txt_nombreKeyTyped
 
     private void txt_cedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cedulaKeyTyped
         char c = evt.getKeyChar();
@@ -184,6 +171,14 @@ public class RegistroDeEmpleados extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_posicionKeyTyped
 
     private void guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarActionPerformed
+        
+         //validacion de los campos del formulario
+        if (txt_nombre.getText().equals("") || txt_direccion.getText().equals("") || txt_cedula.getText().equals("") ||
+                txt_numTelefono.getText().equals("") || txt_posicion.getText().equals("") || txt_fechaDeInicio.getText().equals("") ||
+                txt_sueldo.getText().equals("")){
+            javax.swing.JOptionPane.showMessageDialog(this,"Todos los campos son oblicatorios\n","AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            txt_nombre.requestFocus();
+        }else{
         try {
             PreparedStatement pps;
             pps = cn.prepareStatement("INSERT INTO administrativo(Nombre, Apellidos, Direccion, Posicion_o_puesto, Fecha_de_inicio, Cedula, Telefono, Sueldo)VALUES (?,?,?,?,?,?,?,?)");
@@ -195,19 +190,23 @@ public class RegistroDeEmpleados extends javax.swing.JFrame {
             pps.setString(6,txt_cedula.getText());
             pps.setString(7,txt_numTelefono.getText());
             pps.setString(8,txt_sueldo.getText());
-            pps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Sus datos han sido guardados");
+          int a =  pps.executeUpdate();
+          if (a > 0){
+            JOptionPane.showMessageDialog(null, "Sus datos han sido guardados\n", "GUARDADO",javax.swing.JOptionPane.INFORMATION_MESSAGE);
             
+          } 
         } catch (SQLException ex) {
             Logger.getLogger(RegistroDeEmpleados.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //validacion de los campos del formulario
-        if (txt_nombre.getText().equals("") || txt_direccion.getText().equals("") || txt_cedula.getText().equals("") ||
-                txt_numTelefono.getText().equals("") || txt_posicion.getText().equals("") || txt_fechaDeInicio.getText().equals("") ||
-                txt_sueldo.getText().equals("")){
-            javax.swing.JOptionPane.showMessageDialog(this,"Todos los campos son oblicatorios\n","AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            txt_nombre.requestFocus();
-        }
+       }
+         txt_nombre.setText("");
+         txt_apellidos.setText("");
+         txt_direccion.setText("");
+         txt_posicion.setText("");
+         txt_fechaDeInicio.setText("");
+         txt_cedula.setText("");
+         txt_numTelefono.setText("");
+         txt_sueldo.setText("");
     }//GEN-LAST:event_guardarActionPerformed
 
     private void txt_apellidosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_apellidosKeyTyped
@@ -223,8 +222,10 @@ public class RegistroDeEmpleados extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_sueldoKeyTyped
 
     private void txt_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cancelarActionPerformed
-        // TODO add your handling code here:
-        dispose();
+           int x = JOptionPane.showConfirmDialog(this, "¿Deseas SALIR?\n", "AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            if (JOptionPane.OK_OPTION == x) {
+            System.exit(0);
+        } 
     }//GEN-LAST:event_txt_cancelarActionPerformed
 
     /**
@@ -267,8 +268,8 @@ public class RegistroDeEmpleados extends javax.swing.JFrame {
     private javax.swing.JLabel cedula;
     private javax.swing.JLabel direccion;
     private javax.swing.JLabel fechaInicio;
+    private javax.swing.JPanel fondoJPanel;
     private javax.swing.JButton guardar;
-    private javax.swing.JLabel label_fondo;
     private javax.swing.JLabel nombre;
     private javax.swing.JLabel posicionOPuesto;
     private javax.swing.JLabel sueldo;

@@ -166,10 +166,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_padresActionPerformed
 
     private void horariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_horariosActionPerformed
+      //Conecta la ventana principal con el registro de horarios
         RegistroDeHorarios obj = new RegistroDeHorarios();
         obj.setVisible(true);
-        dispose();
-        // TODO add your handling code here:
     }//GEN-LAST:event_horariosActionPerformed
  
     // Variables declaration - do not modify//GEN-BEGIN:variables

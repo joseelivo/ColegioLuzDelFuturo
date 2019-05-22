@@ -55,6 +55,7 @@ public class RegistroDeDocentes extends javax.swing.JFrame {
         guardar = new javax.swing.JButton();
         txt_cancelar = new javax.swing.JButton();
         label_fondo = new javax.swing.JLabel();
+        fondoJPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registro de Docentes");
@@ -157,9 +158,12 @@ public class RegistroDeDocentes extends javax.swing.JFrame {
         });
         getContentPane().add(txt_cancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 340, 80, 30));
 
+        label_fondo.setBackground(new java.awt.Color(204, 204, 204));
         label_fondo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        label_fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/FondoFormulario.jpg"))); // NOI18N
         getContentPane().add(label_fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 610, 400));
+
+        fondoJPanel.setBackground(new java.awt.Color(204, 204, 204));
+        getContentPane().add(fondoJPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 610, 400));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -188,6 +192,13 @@ public class RegistroDeDocentes extends javax.swing.JFrame {
     private void guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarActionPerformed
          //declaraciones de variables de tipo string para cuando se haga la coneccion a la base de datos
       
+           if (txt_nombre.getText().equals("") || txt_direccion.getText().equals("") || txt_cedula.getText().equals("") ||
+                txt_numTelefono.getText().equals("") || txt_materia.getText().equals("") || txt_fechaDeInicio.getText().equals("") ||
+                txt_sueldo.getText().equals("")){
+            javax.swing.JOptionPane.showMessageDialog(this,"Todos los campos son oblicatorios\n","AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            txt_nombre.requestFocus();
+        }
+           else{
        try {
             PreparedStatement pps;
             pps = (PreparedStatement) cn.prepareStatement("INSERT INTO registro_docente(Nombre,Apellidos,Direccion,Materia,Fecha_de_inicio,Cedula,Telefono,Sueldo)VALUES (?,?,?,?,?,?,?,?)");
@@ -200,19 +211,27 @@ public class RegistroDeDocentes extends javax.swing.JFrame {
             pps.setString(7,txt_numTelefono.getText());
             pps.setString(8,txt_sueldo.getText());
             pps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Sus datos han sido guardados");
+            int a =  pps.executeUpdate();
+            if (a > 0){
+            JOptionPane.showMessageDialog(null, "Sus datos han sido guardados\n", "GUARDADO",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            
+          }
             
         } catch (SQLException ex) {
             Logger.getLogger(RegistroDeEmpleados.class.getName()).log(Level.SEVERE, null, ex);
         }
+ }
         
         //validacion de los campos del formulario
-        if (txt_nombre.getText().equals("") || txt_direccion.getText().equals("") || txt_cedula.getText().equals("") ||
-                txt_numTelefono.getText().equals("") || txt_materia.getText().equals("") || txt_fechaDeInicio.getText().equals("") ||
-                txt_sueldo.getText().equals("")){
-            javax.swing.JOptionPane.showMessageDialog(this,"Todos los campos son oblicatorios\n","AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            txt_nombre.requestFocus();
-        }
+      
+         txt_nombre.setText("");
+         txt_apellidos.setText("");
+         txt_direccion.setText("");
+         txt_materia.setText("");
+         txt_fechaDeInicio.setText("");
+         txt_cedula.setText("");
+         txt_numTelefono.setText("");
+         txt_sueldo.setText("");          
     }//GEN-LAST:event_guardarActionPerformed
 
     private void txt_apellidosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_apellidosKeyTyped
@@ -232,8 +251,10 @@ public class RegistroDeDocentes extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_materiaActionPerformed
 
     private void txt_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cancelarActionPerformed
-        // TODO add your handling code here:
-        dispose();
+            int x = JOptionPane.showConfirmDialog(this, "¿Deseas SALIR?\n", "AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            if (JOptionPane.OK_OPTION == x) {
+            System.exit(0);
+        } 
     }//GEN-LAST:event_txt_cancelarActionPerformed
 
     /**
@@ -277,6 +298,7 @@ public class RegistroDeDocentes extends javax.swing.JFrame {
     private javax.swing.JLabel cedula;
     private javax.swing.JLabel direccion;
     private javax.swing.JLabel fechaInicio;
+    private javax.swing.JPanel fondoJPanel;
     private javax.swing.JButton guardar;
     private javax.swing.JLabel label_fondo;
     private javax.swing.JLabel materia;

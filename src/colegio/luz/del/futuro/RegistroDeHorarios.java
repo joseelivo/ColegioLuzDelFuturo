@@ -197,36 +197,39 @@ public class RegistroDeHorarios extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_CursoActionPerformed
 
     private void btn_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelarActionPerformed
-        txt_Asignatura.setText("");
-        txt_Maestro.setText("");
-        txt_Curso.setText("");
-        jcb_Dia.setSelectedItem("Dia");
-        jcb_Hora.setSelectedItem("Hora");
+        int x = JOptionPane.showConfirmDialog(this, "¿Deseas SALIR?\n", "AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        if (JOptionPane.OK_OPTION == x) {
+            System.exit(0);
+        } 
        // TODO add your handling code here:
     }//GEN-LAST:event_btn_CancelarActionPerformed
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
-      
+    
+         if (txt_Asignatura.getText().equals("") || txt_Maestro.getText().equals("") || txt_Curso.getText().equals("") ||
+           jcb_Dia.getSelectedItem().equals("") || jcb_Hora.getSelectedItem().equals("")){
+           javax.swing.JOptionPane.showMessageDialog(this,"Todos los campos son oblicatorios\n","AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+           txt_Asignatura.requestFocus();
+        }else{
     try {
             PreparedStatement pps;
-            pps = cn.prepareStatement("INSERT INTO RegistroDeHorarios(Asignatura, Maestro, Curso, Dia, Hora)VALUES (?,?,?,?,?)");
+            pps = cn.prepareStatement("INSERT INTO registro_horario(Asignatura,Hora,Curso,Maestro,Dia)VALUES (?,?,?,?,?)");
             pps.setString(1, txt_Asignatura.getText());
-            pps.setString(2, txt_Maestro.getText());
+            pps.setString(2, jcb_Hora.getSelectedItem().toString());
             pps.setString(3, txt_Curso.getText());
-            pps.setString(4, jcb_Dia.getSelectedItem().toString());
-            pps.setString(5, jcb_Hora.getSelectedItem().toString());
-            pps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Sus datos han sido guardados");
+            pps.setString(4, txt_Maestro.getText());
+            pps.setString(5, jcb_Dia.getSelectedItem().toString());
+           
+           int a =  pps.executeUpdate();
+           if (a > 0){
+            JOptionPane.showMessageDialog(null, "Sus datos han sido guardados\n", "GUARDADO",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            
+          }
             
         } catch (SQLException ex) {
             Logger.getLogger(RegistroDeHorarios.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-       if (txt_Asignatura.getText().equals("") || txt_Maestro.getText().equals("") || txt_Curso.getText().equals("") ||
-           jcb_Dia.getSelectedItem().equals("") || jcb_Hora.getSelectedItem().equals("")){
-           javax.swing.JOptionPane.showMessageDialog(this,"Todos los campos son oblicatorios\n","AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
-           txt_Asignatura.requestFocus();
-        } 
+    }
             txt_Asignatura.setText("");
             txt_Maestro.setText("");
             txt_Curso.setText("");

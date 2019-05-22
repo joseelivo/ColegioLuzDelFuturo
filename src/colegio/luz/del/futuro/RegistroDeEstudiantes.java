@@ -1,7 +1,6 @@
 
 package colegio.luz.del.futuro;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -46,7 +45,7 @@ public class RegistroDeEstudiantes extends javax.swing.JFrame {
         txt_madre = new javax.swing.JTextField();
         guardar = new javax.swing.JButton();
         txt_cancelar = new javax.swing.JButton();
-        label_fondo = new javax.swing.JLabel();
+        fondoJPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registro de Estuantes");
@@ -176,9 +175,8 @@ public class RegistroDeEstudiantes extends javax.swing.JFrame {
         });
         getContentPane().add(txt_cancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 340, 80, 30));
 
-        label_fondo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        label_fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/FondoFormulario.jpg"))); // NOI18N
-        getContentPane().add(label_fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 610, 400));
+        fondoJPanel.setBackground(new java.awt.Color(204, 204, 204));
+        getContentPane().add(fondoJPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 610, 400));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -207,9 +205,17 @@ public class RegistroDeEstudiantes extends javax.swing.JFrame {
     
     
     private void guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarActionPerformed
-         //declaraciones de variables de tipo string para cuando se haga la coneccion a la base de datos
-      
-        try {
+        
+     //validacion de los campos del formulario
+        if (txt_nombre.getText().equals("") || txt_direccion.getText().equals("") || txt_correo.getText().equals("") ||
+                txt_numTelefono.getText().equals("") || txt_madre.getText().equals("") || txt_fechaDeNacimiento.getText().equals("") ||
+                txt_padre.getText().equals("")){
+            javax.swing.JOptionPane.showMessageDialog(this,"Todos los campos son oblicatorios\n","AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            txt_nombre.requestFocus();
+        }else{        
+        
+    //declaraciones de variables de tipo string para cuando se haga la coneccion a la base de datos
+       try {
             PreparedStatement pps;
             pps = cn.prepareStatement("INSERT INTO registro_estudiantes(Nombre,Apellidos,Direccion,Telefono,Fecha_de_nacimiento,Correo,Padre,Madre)VALUES (?,?,?,?,?,?,?,?)");
             pps.setString(1,txt_nombre.getText());
@@ -220,20 +226,26 @@ public class RegistroDeEstudiantes extends javax.swing.JFrame {
             pps.setString(6,txt_correo.getText());
             pps.setString(7,txt_padre.getText());
             pps.setString(8,txt_madre.getText());
-            pps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Sus datos han sido guardados");
+            int a =  pps.executeUpdate();
+            if (a > 0){
+            JOptionPane.showMessageDialog(null, "Sus datos han sido guardados\n", "GUARDADO",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            
+          }
             
         } catch (SQLException ex) {
             Logger.getLogger(RegistroDeEmpleados.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        //validacion de los campos del formulario
-        if (txt_nombre.getText().equals("") || txt_direccion.getText().equals("") || txt_correo.getText().equals("") ||
-                txt_numTelefono.getText().equals("") || txt_madre.getText().equals("") || txt_fechaDeNacimiento.getText().equals("") ||
-                txt_padre.getText().equals("")){
-            javax.swing.JOptionPane.showMessageDialog(this,"Todos los campos son oblicatorios\n","AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            txt_nombre.requestFocus();
-        }
+    }      
+         txt_nombre.setText("");
+         txt_apellidos.setText("");
+         txt_direccion.setText("");
+         txt_numTelefono.setText("");
+         txt_fechaDeNacimiento.setText("");
+         txt_correo.setText("");
+         txt_padre.setText("");
+         txt_madre.setText("");
+              
+           
     }//GEN-LAST:event_guardarActionPerformed
 
     private void txt_apellidosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_apellidosKeyTyped
@@ -261,8 +273,10 @@ public class RegistroDeEstudiantes extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_direccionActionPerformed
 
     private void txt_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cancelarActionPerformed
-        // TODO add your handling code here:
-        dispose();
+          int x = JOptionPane.showConfirmDialog(this, "¿Deseas SALIR?\n", "AVISO!",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            if (JOptionPane.OK_OPTION == x) {
+            System.exit(0);
+        } 
     }//GEN-LAST:event_txt_cancelarActionPerformed
 
     private void txt_fechaDeNacimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_fechaDeNacimientoActionPerformed
@@ -292,8 +306,8 @@ public class RegistroDeEstudiantes extends javax.swing.JFrame {
     private javax.swing.JLabel correo;
     private javax.swing.JLabel direccion;
     private javax.swing.JLabel fechaDeNacimiento;
+    private javax.swing.JPanel fondoJPanel;
     private javax.swing.JButton guardar;
-    private javax.swing.JLabel label_fondo;
     private javax.swing.JLabel madre;
     private javax.swing.JLabel nombre;
     private javax.swing.JLabel padre;
